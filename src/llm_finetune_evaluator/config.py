@@ -157,7 +157,8 @@ class MockModelConfig(_ModelConfigBase):
     The mock looks up each item in the eval set and answers correctly with
     probability ``accuracy``. Outcomes of different mock models are correlated
     through a shared per-item difficulty (``item_correlation``), as they are
-    for real models.
+    for real models. Without an explicit ``seed`` the seed is derived from the
+    model name, so two mock models never share their private randomness.
     """
 
     backend: Literal["mock"]
@@ -167,7 +168,7 @@ class MockModelConfig(_ModelConfigBase):
     abstain_rate: float = Field(0.5, ge=0.0, le=1.0)
     by_tag: dict[str, MockSkill] = Field(default_factory=dict)
     item_correlation: float = Field(0.6, ge=0.0, le=1.0)
-    seed: int = 0
+    seed: int | None = None
     responses: dict[str, str] = Field(default_factory=dict)
     latency_s: float = Field(0.0, ge=0.0)
 
