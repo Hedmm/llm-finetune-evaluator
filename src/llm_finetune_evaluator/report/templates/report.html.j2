@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="llm-finetune-evaluator {{ a.tool_version }}">
+<title>{{ a.title }}</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --wash: rgba(11, 11, 11, 0.04);
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a; --series-4: #eda100;
+  --series-5: #e87ba4; --series-6: #008300; --series-7: #6250d6; --series-8: #e34948;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --critical: #d03b3b;
+  --critical-wash: rgba(208, 59, 59, 0.08);
+  --warning-wash: rgba(250, 178, 25, 0.12);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --text: #f0efec;
+    --text-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --wash: rgba(255, 255, 255, 0.04);
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+    --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+    --critical-wash: rgba(208, 59, 59, 0.16);
+    --warning-wash: rgba(250, 178, 25, 0.10);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--page); color: var(--text);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main, header.page, nav.toc { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+header.page { padding-top: 32px; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; font-weight: 650; }
+h2 { font-size: 20px; margin: 40px 0 12px; font-weight: 650; }
+h3 { font-size: 16px; margin: 24px 0 8px; font-weight: 650; }
+p { margin: 0 0 12px; }
+a { color: var(--series-1); }
+code { font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.meta, .hint { color: var(--text-2); }
+.hint { font-size: 13px; }
+nav.toc { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; }
+nav.toc a { color: var(--text-2); text-decoration: none; }
+nav.toc a:hover { color: var(--text); text-decoration: underline; }
+section { margin-bottom: 8px; }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; margin: 12px 0;
+}
+.callout {
+  border-radius: 8px; padding: 12px 16px; margin: 12px 0;
+  background: var(--warning-wash); border: 1px solid var(--border);
+}
+.callout.critical { background: var(--critical-wash); }
+.callout strong { font-weight: 650; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.summary .card { margin: 0; }
+.summary .label { color: var(--text-2); font-size: 13px; }
+.summary .value { font-size: 26px; font-weight: 600; margin: 2px 0; }
+.summary .detail { font-size: 13px; color: var(--text-2); }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-weight: 600; color: var(--text-2); font-size: 13px; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.nowrap { white-space: nowrap; }
+tr.flagged td { background: var(--critical-wash); }
+.badge { white-space: nowrap; }
+.badge .icon { font-size: 12px; }
+.badge.worse .icon { color: var(--critical); }
+.badge.better .icon { color: var(--good); }
+.badge.caution .icon { color: var(--warning); }
+.badge.neutral { color: var(--text-2); }
+.dim { color: var(--muted); }
+details { margin: 8px 0; }
+details > summary { cursor: pointer; color: var(--text-2); font-size: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--text-2); margin: 4px 0 0; }
+.legend .key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.chart-scroll { overflow-x: auto; }
+svg.chart { width: 100%; min-width: 600px; height: auto; display: block; }
+svg.chart .grid { stroke: var(--grid); stroke-width: 1; }
+svg.chart .zero { stroke: var(--axis); stroke-width: 1.5; }
+svg.chart .tick, svg.chart .row-label, svg.chart .note { fill: var(--text-2); font-size: 12px; font-family: inherit; }
+svg.chart .note { fill: var(--text); }
+svg.chart .hit { fill: transparent; }
+svg.chart .mark:hover .hit, svg.chart .mark:focus .hit { fill: var(--wash); }
+svg.chart .mark:focus { outline: none; }
+svg.chart .whisker { stroke-width: 2; stroke-linecap: round; }
+svg.chart .dot { stroke: var(--surface); stroke-width: 2; }
+{% for i in range(1, 9) %}svg.chart .series-{{ i }} .whisker { stroke: var(--series-{{ i }}); } svg.chart .series-{{ i }} .dot { fill: var(--series-{{ i }}); } .key.series-{{ i }} { background: var(--series-{{ i }}); }
+{% endfor %}svg.chart .series-muted .whisker, svg.chart .neutral .whisker { stroke: var(--muted); }
+svg.chart .series-muted .dot, svg.chart .neutral .dot { fill: var(--muted); }
+.key.series-muted { background: var(--muted); }
+svg.chart .status-critical .whisker { stroke: var(--critical); } svg.chart .status-critical .dot { fill: var(--critical); }
+svg.chart .status-good .whisker { stroke: var(--good); } svg.chart .status-good .dot { fill: var(--good); }
+.example { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin: 12px 0; }
+.example .head { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; margin-bottom: 8px; }
+.example .head code { font-weight: 600; }
+.example .prompt { white-space: pre-wrap; color: var(--text-2); font-size: 14px; margin: 0 0 8px; }
+.example .reference { font-size: 14px; margin: 0 0 10px; }
+.side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.side-by-side .output { border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+.side-by-side .output h4 { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--text-2); }
+.side-by-side pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+@media (max-width: 640px) { .side-by-side { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+.tooltip {
+  position: fixed; z-index: 10; pointer-events: none; max-width: 360px;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 13px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+footer { max-width: 1080px; margin: 48px auto 32px; padding: 0 16px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+{%- macro badge(c) -%}
+{%- if c.outcome == "worse" -%}<span class="badge worse"><span class="icon">&#9660;</span> worse</span>
+{%- elif c.outcome == "better" -%}<span class="badge better"><span class="icon">&#9650;</span> better</span>
+{%- else -%}<span class="badge neutral">not significant</span>{%- endif -%}
+{%- endmacro -%}
+{%- macro metric_name(m) -%}
+<code>{{ m.name }}</code>{% if not m.higher_is_better %} <span class="dim">(lower is better)</span>{% endif %}{% if a.judge_unreliable(m) %} <span class="badge caution"><span class="icon">&#9888;</span> unreliable judge</span>{% endif %}
+{%- endmacro -%}
+{%- macro comparison_table(rows) -%}
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th>Comparison</th><th class="num">n</th><th class="num">Difference ({{ confidence }} CI)</th><th class="num">p (Holm)</th><th class="num">Wins / losses</th><th class="num">MDE</th><th>Verdict</th></tr></thead>
+<tbody>
+{%- for c in rows %}
+<tr{% if c.outcome == "worse" %} class="flagged"{% endif %}><td>{{ metric_name(a.metric(c.metric)) }}</td><td class="nowrap">{{ c.candidate }} vs {{ c.baseline }}<div class="hint">{{ c.slice_label }}</div></td><td class="num">{{ c.n }}</td><td class="num">{{ c.difference | points }} <span class="dim">({{ c.ci_low | signed_interval(c.ci_high) }})</span></td><td class="num">{{ c.p_adjusted | pvalue }}<div class="hint">raw {{ c.p_value | pvalue }}</div></td><td class="num">{{ c.candidate_better }} / {{ c.baseline_better }}</td><td class="num">{{ c.mde | mde }}</td><td class="nowrap">{{ badge(c) }}</td></tr>
+{%- endfor %}
+</tbody></table></div>
+{%- endmacro %}
+<header class="page">
+  <h1>{{ a.title }}</h1>
+  {% if a.description %}<p>{{ a.description }}</p>{% endif %}
+  <p class="meta">Generated {{ a.created_at | timestamp }} by llm-finetune-evaluator {{ a.tool_version }} · baseline <strong>{{ a.baseline }}</strong> · {{ a.models | length }} models · {{ n_items }} items in {{ a.eval_sets | length }} eval set{{ "s" if a.eval_sets | length != 1 }}</p>
+</header>
+<nav class="toc" aria-label="Sections">
+  <a href="#headline">Headline</a>{% if a.candidates %}<a href="#comparisons">Comparisons</a><a href="#regressions">Regressions</a>{% endif %}<a href="#slices">Slices</a>{% if a.examples %}<a href="#examples">Wins and losses</a>{% endif %}{% if a.judge_status != "not_used" %}<a href="#judge">Judge</a>{% endif %}<a href="#metadata">Run metadata</a><a href="#method">Method</a>
+</nav>
+<main>
+{%- for warning in a.warnings %}
+<div class="callout{% if 'unreliable' in warning or 'too low' in warning %} critical{% endif %}" role="note"><strong>Warning.</strong> {{ warning }}</div>
+{%- endfor %}
+{%- if a.judge_status == "uncalibrated" %}
+<div class="callout" role="note"><strong>Note.</strong> Judge-based metrics are not calibrated against human labels. Run <code>lfe judge-calibrate</code> before relying on them.</div>
+{%- endif %}
+
+{%- if summary %}
+<section class="summary" aria-label="Summary">
+{%- for s in summary %}
+  <div class="card">
+    <div class="label">{{ s.candidate }} vs {{ a.baseline }} · <code>{{ s.metric }}</code></div>
+    <div class="value">{{ s.comparison.difference | points }}</div>
+    <div class="detail">{{ confidence }} CI {{ s.comparison.ci_low | signed_interval(s.comparison.ci_high) }} · p (Holm) {{ s.comparison.p_adjusted | pvalue }} · {{ badge(s.comparison) }}</div>
+    <div class="detail">{% if s.regressions %}<span class="badge worse"><span class="icon">&#9660;</span> {{ s.regressions }} regression{{ "s" if s.regressions != 1 }}</span>{% else %}No regressions{% endif %}</div>
+  </div>
+{%- endfor %}
+</section>
+{%- endif %}
+
+<section id="headline">
+<h2>Headline metrics</h2>
+<p class="hint">Mean score per model with {{ confidence }} percentile bootstrap intervals ({{ "{:,}".format(s.bootstrap_resamples) }} resamples, seed {{ s.seed }}).</p>
+<div class="card">
+<div class="chart-scroll">{{ headline_chart | safe }}</div>
+<div class="legend" aria-hidden="true">{% for model in a.models %}<span><span class="key {{ series_class(loop.index0) }}"></span>{{ model }}{% if model == a.baseline %} (baseline){% endif %}</span>{% endfor %}</div>
+</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th class="num">n</th>{% for model in a.models %}<th class="num">{{ model }}</th>{% endfor %}</tr></thead>
+<tbody>
+{%- for m in a.metrics %}
+{%- set per_model = a.headline[m.name] %}
+<tr><td>{{ metric_name(m) }}<div class="hint">{{ m.description }}</div></td><td class="num">{{ n_for(m.name) }}</td>{% for model in a.models %}<td class="num">{{ per_model[model].estimate | estimate }}</td>{% endfor %}</tr>
+{%- endfor %}
+</tbody></table></div>
+{%- if label_rows %}
+<details><summary>Outcome labels (refusals, made-up answers, invalid labels, judge verdicts)</summary>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>Model</th><th>Counts</th></tr></thead><tbody>
+{%- for row in label_rows %}<tr><td><code>{{ row[0] }}</code></td><td>{{ row[1] }}</td><td>{{ row[2] }}</td></tr>{% endfor %}
+</tbody></table></div></details>
+{%- endif %}
+{%- if a.extraction %}
+<h3>Extraction details</h3>
+<p class="hint">Micro-averaged over all fields of all items.</p>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>Model</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th><th class="num">Invalid JSON</th></tr></thead><tbody>
+{%- for metric, per_model in a.extraction.items() %}{% for model, v in per_model.items() %}
+<tr><td><code>{{ metric }}</code></td><td>{{ model }}</td><td class="num">{{ v.precision | percent }}</td><td class="num">{{ v.recall | percent }}</td><td class="num">{{ v.f1 | percent }}</td><td class="num">{{ v.invalid_json | int }}</td></tr>
+{%- endfor %}{% endfor %}
+</tbody></table></div>
+{%- endif %}
+</section>
+
+{%- if a.candidates %}
+<section id="comparisons">
+<h2>Comparison with the baseline</h2>
+<p class="hint">Paired tests on the items both models answered: exact McNemar for 0/1 scores, a paired permutation test otherwise. p-values are Holm-adjusted across all model pairs of each metric. MDE is the smallest difference this comparison would detect with {{ "{:.0%}".format(s.power) }} power at alpha = {{ s.alpha }}; a non-significant result with a large MDE means the eval set is too small to tell, not that the models are equal.</p>
+{{ comparison_table(baseline_pairs) }}
+{%- if other_pairs %}
+<details><summary>Other model pairs ({{ other_pairs | length }})</summary>
+{{ comparison_table(other_pairs) }}
+</details>
+{%- endif %}
+</section>
+
+<section id="regressions">
+<h2>Regressions</h2>
+{%- if a.regressions %}
+<p>Comparisons where a candidate is significantly <strong>worse</strong> than the baseline after Holm correction (alpha = {{ s.alpha }}), overall or in a slice.</p>
+{{ comparison_table(a.regressions) }}
+{%- else %}
+<div class="card"><span class="badge better"><span class="icon">&#10003;</span></span> No regressions: no candidate is significantly worse than the baseline, overall or in any slice, after Holm correction.</div>
+{%- endif %}
+{%- if a.possible_regressions %}
+<details><summary>Possible regressions: significant before correction only ({{ a.possible_regressions | length }})</summary>
+<p class="hint">Worth a closer look, not yet evidence: with many slices some will cross p &lt; {{ s.alpha }} by chance.</p>
+{{ comparison_table(a.possible_regressions) }}
+</details>
+{%- endif %}
+</section>
+{%- endif %}
+
+<section id="slices">
+<h2>Slices</h2>
+<p class="hint">Every metric per slice (slices with at least {{ s.min_slice_size }} items). The charts show the difference between each candidate and the baseline with its {{ confidence }} interval; &#9660; and &#9650; mark slices where the candidate is significantly worse or better after Holm correction across that candidate's slices.</p>
+{%- for m in a.metrics %}
+{%- set rows = a.slices.get(m.name, []) %}
+{%- if rows %}
+<h3>{{ metric_name(m) }}</h3>
+{%- for candidate in a.candidates %}
+{%- set chart = forest(candidate, m.name) %}
+{%- if chart %}
+<div class="card">
+<p class="hint">{{ candidate }} minus {{ a.baseline }}, percentage points{% if not m.higher_is_better %} (negative is better for this metric){% endif %}</p>
+<div class="chart-scroll">{{ chart | safe }}</div>
+</div>
+{%- endif %}
+{%- endfor %}
+<details{% if loop.first %} open{% endif %}><summary>Table: {{ m.name }} by slice</summary>
+<div class="table-wrap"><table>
+<thead><tr><th>Slice</th><th class="num">n</th>{% for model in a.models %}<th class="num">{{ model }}</th>{% endfor %}</tr></thead>
+<tbody>
+{%- for row in rows %}
+{%- set flagged = row.comparisons.values() | selectattr("outcome", "equalto", "worse") | list %}
+<tr{% if flagged %} class="flagged"{% endif %}><td>{{ row.dimension }}=<strong>{{ row.value }}</strong>{% if row.aliases %}<div class="hint">same items as {{ row.aliases | join(", ") }}</div>{% endif %}</td><td class="num">{{ row.n }}</td>
+{%- for model in a.models %}{% set c = row.comparisons.get(model) %}<td class="num">{{ row.estimates.get(model) | estimate }}{% if c and c.outcome == "worse" %} <span class="badge worse" title="{{ c.difference | points }}, Holm p = {{ c.p_adjusted | pvalue }}"><span class="icon">&#9660;</span></span>{% elif c and c.outcome == "better" %} <span class="badge better" title="{{ c.difference | points }}, Holm p = {{ c.p_adjusted | pvalue }}"><span class="icon">&#9650;</span></span>{% endif %}</td>{% endfor %}</tr>
+{%- endfor %}
+</tbody></table></div>
+</details>
+{%- endif %}
+{%- endfor %}
+</section>
+
+{%- if a.examples %}
+<section id="examples">
+<h2>Wins and losses</h2>
+<p class="hint">Items where the candidate and the baseline scored differently on the primary metric, largest differences first, with both outputs side by side.</p>
+{%- for ex in a.examples %}
+<h3>{{ ex.candidate }} vs {{ a.baseline }} on <code>{{ ex.metric }}</code></h3>
+<p>{{ ex.candidate }} scores higher on <strong>{{ ex.n_wins }}</strong> items and lower on <strong>{{ ex.n_losses }}</strong>.</p>
+<details{% if loop.first %} open{% endif %}><summary>Show {{ ex.wins | length }} wins and {{ ex.losses | length }} losses</summary>
+{%- for kind, rows in [("Win", ex.wins), ("Loss", ex.losses)] %}
+{%- for e in rows %}
+<div class="example">
+  <div class="head"><span class="badge {{ 'better' if kind == 'Win' else 'worse' }}"><span class="icon">{{ '&#9650;' | safe if kind == 'Win' else '&#9660;' | safe }}</span> {{ kind }}</span><code>{{ e.id }}</code><span class="dim">{{ e.task }}{% for k, v in e.tags.items() %} · {{ k }}={{ v }}{% endfor %}</span></div>
+  <p class="prompt">{{ e.input | truncate_text(500) }}</p>
+  <p class="reference"><span class="dim">Reference:</span> {{ e.reference | reference }}</p>
+  <div class="side-by-side">
+    <div class="output"><h4>{{ a.baseline }} · score {{ "%g" | format(e.baseline_score) }}{% if e.baseline_label %} · {{ e.baseline_label }}{% endif %}</h4><pre>{{ e.baseline_output | truncate_text(800) }}</pre></div>
+    <div class="output"><h4>{{ ex.candidate }} · score {{ "%g" | format(e.candidate_score) }}{% if e.candidate_label %} · {{ e.candidate_label }}{% endif %}</h4><pre>{{ e.candidate_output | truncate_text(800) }}</pre></div>
+  </div>
+</div>
+{%- endfor %}
+{%- endfor %}
+</details>
+{%- endfor %}
+</section>
+{%- endif %}
+
+{%- if a.judge_status != "not_used" %}
+<section id="judge">
+<h2>LLM judge</h2>
+{%- set judge = a.judge or {} %}
+<p>Judge: <code>{{ judge.get("name", "judge") }}</code> ({{ judge.get("kind", "unknown backend") }}{% if judge.get("model") %}, <code>{{ judge.get("model") }}</code>{% endif %}). It grades one response at a time and is never told which model wrote it.</p>
+{%- set cal = a.calibration %}
+{%- if cal %}
+<div class="callout{% if not cal.reliable %} critical{% endif %}" role="note">
+{%- if cal.reliable %}<strong>Calibrated.</strong>{% else %}<strong>Unreliable.</strong>{% endif %}
+ Agreement with {{ cal.n }} human labels: {{ cal.agreement | percent }}, Cohen's kappa {{ cal.kappa | kappa }} ({{ "{:.0%}".format(cal.confidence) }} CI {{ cal.kappa_low | kappa }} to {{ cal.kappa_high | kappa }}), threshold {{ "%.2f" | format(cal.threshold) }}.{% if not cal.reliable %} Judge-based results in this report should not be trusted.{% endif %}
+</div>
+<div class="table-wrap"><table>
+<thead><tr><th>Human \ judge</th>{% for c in used_categories %}<th class="num">{{ c[1] }}</th>{% endfor %}</tr></thead>
+<tbody>{% for r in used_categories %}<tr><td>{{ r[1] }}</td>{% for c in used_categories %}<td class="num{% if r[0] == c[0] %} diag{% endif %}">{% if r[0] == c[0] %}<strong>{{ cal.confusion[r[0]][c[0]] }}</strong>{% else %}{{ cal.confusion[r[0]][c[0]] }}{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+</table></div>
+<p class="hint">Rows are human verdicts, columns judge verdicts; the diagonal counts agreements. Labels file <code>{{ cal.labels_file }}</code> (SHA-256 {{ cal.labels_sha256[:16] }}).</p>
+{%- else %}
+<p>Not calibrated against human labels.</p>
+{%- endif %}
+</section>
+{%- endif %}
+
+<section id="metadata">
+<h2>Run metadata</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Model</th><th>Backend</th><th>Model id</th><th>Sampling</th><th class="num">Items</th><th class="num">Generations</th><th>Finished</th></tr></thead>
+<tbody>
+{%- for run in a.runs %}
+<tr><td>{{ run.model }}{% if run.model == a.baseline %} <span class="dim">(baseline)</span>{% endif %}</td><td>{{ run.backend.get("kind", "") }}</td><td><code>{{ model_id(run) }}</code></td><td>{{ sampling_text(run) }}</td><td class="num">{{ run.n_items }}</td><td class="num">{{ run.generated }} new · {{ run.cached }} cached</td><td class="nowrap">{{ run.finished_at | timestamp }}</td></tr>
+{%- endfor %}
+</tbody></table></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Eval set</th><th>File</th><th class="num">Items</th><th>Content SHA-256</th></tr></thead>
+<tbody>
+{%- for e in a.eval_sets %}<tr><td>{{ e.name }}</td><td><code>{{ e.path }}</code></td><td class="num">{{ e.n_items }}</td><td><code>{{ e.sha256 }}</code></td></tr>{% endfor %}
+</tbody></table></div>
+<details><summary>Backend settings</summary>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Settings</th></tr></thead><tbody>
+{%- for run in a.runs %}<tr><td>{{ run.model }}</td><td><code>{{ run.backend | tojson }}</code></td></tr>{% endfor %}
+</tbody></table></div></details>
+</section>
+
+<section id="method">
+<h2>Method</h2>
+<div class="card">
+<p>Every model answers the same items, so models are compared item by item. Intervals are {{ confidence }} percentile bootstrap intervals with {{ "{:,}".format(s.bootstrap_resamples) }} resamples; differences resample items, keeping the pairing. 0/1 metrics are tested with the exact McNemar test, other metrics with a paired sign-flip permutation test (exact when the scores lie on a grid such as 0, 0.5, 1; otherwise {{ "{:,}".format(s.permutation_resamples) }} random sign flips). Holm's correction controls the family-wise error rate at alpha = {{ s.alpha }}: across model pairs for each metric in the comparison table, and across slices of one candidate for each metric in the slice tables. The minimum detectable effect uses Connor's (1987) normal approximation with the observed disagreement rate. Seed {{ s.seed }}: rerunning the report gives the same numbers.</p>
+</div>
+</section>
+</main>
+<footer>llm-finetune-evaluator {{ a.tool_version }} · experiment {{ a.experiment or "n/a" }}</footer>
+<script>
+(function () {
+  var tip = document.createElement("div");
+  tip.className = "tooltip";
+  tip.hidden = true;
+  tip.setAttribute("role", "tooltip");
+  document.body.appendChild(tip);
+  function place(x, y) {
+    var left = Math.min(x + 14, window.innerWidth - tip.offsetWidth - 8);
+    var top = y + 16;
+    if (top + tip.offsetHeight > window.innerHeight - 8) { top = y - tip.offsetHeight - 12; }
+    tip.style.left = Math.max(8, left) + "px";
+    tip.style.top = Math.max(8, top) + "px";
+  }
+  function show(element, x, y) {
+    tip.textContent = element.getAttribute("data-tip");
+    tip.hidden = false;
+    place(x, y);
+  }
+  function hide() { tip.hidden = true; }
+  document.querySelectorAll("[data-tip]").forEach(function (element) {
+    element.addEventListener("pointerenter", function (event) { show(element, event.clientX, event.clientY); });
+    element.addEventListener("pointermove", function (event) { place(event.clientX, event.clientY); });
+    element.addEventListener("pointerleave", hide);
+    element.addEventListener("focus", function () {
+      var box = element.getBoundingClientRect();
+      show(element, box.left + box.width / 2, box.top + box.height / 2);
+    });
+    element.addEventListener("blur", hide);
+  });
+})();
+</script>
+</body>
+</html>
