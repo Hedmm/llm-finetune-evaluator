@@ -213,12 +213,40 @@ ModelConfig = Annotated[
 ]
 
 
+class PromptConfig(PromptTemplate):
+    """A prompt template whose variables can also come from text files.
+
+    ``variable_files`` maps a variable name to a file; the variable becomes the
+    list of the file's non-empty lines, for example a label set shared with a
+    ``label_set`` scorer: ``{{ labels | join(", ") }}``.
+    """
+
+    variable_files: dict[str, ConfigPath] = Field(default_factory=dict)
+
+    def resolve(self) -> PromptTemplate:
+        """Return the template with file variables loaded.
+
+        Raises:
+            ConfigError: If a file is missing or a name is defined twice.
+        """
+        variables = dict(self.variables)
+        for name, path in self.variable_files.items():
+            if name in variables:
+                raise ConfigError(f"prompt variable {name!r} is set both inline and from a file")
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except FileNotFoundError as error:
+                raise ConfigError(f"prompt variable file not found: {path}") from error
+            variables[name] = [line.strip() for line in lines if line.strip()]
+        return PromptTemplate(system=self.system, template=self.template, variables=variables)
+
+
 class EvalSetConfig(_Strict):
     """An eval set file and the prompt used to present its items."""
 
     name: Name
     path: ConfigPath
-    prompt: PromptTemplate = Field(default_factory=PromptTemplate)
+    prompt: PromptConfig = Field(default_factory=PromptConfig)
 
 
 class _ScorerConfigBase(_Strict):

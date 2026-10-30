@@ -215,3 +215,43 @@ def test_config_is_immutable() -> None:
     assert isinstance(config, ExperimentConfig)
     with pytest.raises(ValueError, match="frozen"):
         config.name = "other"  # type: ignore[misc]
+
+
+def test_prompt_variables_can_come_from_files(tmp_path: Path) -> None:
+    data = _config(
+        eval_sets=[
+            {
+                "name": "qa",
+                "path": "data/qa.jsonl",
+                "prompt": {
+                    "template": "{{ labels | join(', ') }}: {{ input }}",
+                    "variable_files": {"labels": "labels.txt"},
+                },
+            }
+        ]
+    )
+    path = _write(tmp_path, data)
+    (path.parent / "labels.txt").write_text("card_arrival\n\ncard_linking\n", encoding="utf-8")
+    prompt = load_config(path).eval_sets[0].prompt.resolve()
+    assert prompt.variables == {"labels": ["card_arrival", "card_linking"]}
+
+
+def test_prompt_variable_files_are_checked(tmp_path: Path) -> None:
+    missing = _config(
+        eval_sets=[
+            {"name": "qa", "path": "q.jsonl", "prompt": {"variable_files": {"labels": "x.txt"}}}
+        ]
+    )
+    with pytest.raises(ConfigError, match="prompt variable file not found"):
+        load_config(_write(tmp_path, missing)).eval_sets[0].prompt.resolve()
+    clash = _config(
+        eval_sets=[
+            {
+                "name": "qa",
+                "path": "q.jsonl",
+                "prompt": {"variables": {"labels": ["a"]}, "variable_files": {"labels": "x.txt"}},
+            }
+        ]
+    )
+    with pytest.raises(ConfigError, match="both inline and from a file"):
+        load_config(_write(tmp_path, clash)).eval_sets[0].prompt.resolve()

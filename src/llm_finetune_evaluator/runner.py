@@ -118,7 +118,7 @@ def load_eval_sets(config: ExperimentConfig) -> list[EvalSet]:
 
 def prepare_items(config: ExperimentConfig, eval_sets: Sequence[EvalSet]) -> list[PreparedItem]:
     """Render the prompt of every item, so template errors surface before any model call."""
-    prompts = {entry.name: entry.prompt for entry in config.eval_sets}
+    prompts = {entry.name: entry.prompt.resolve() for entry in config.eval_sets}
     return [
         PreparedItem(eval_set.name, item, render_messages(item, prompts[eval_set.name]))
         for eval_set in eval_sets
