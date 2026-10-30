@@ -154,10 +154,10 @@ class Scorer(ABC):
 
     @property
     def description(self) -> str:
-        """One-line explanation of the metric for reports."""
-        return (
-            self.__class__.__doc__.strip().splitlines()[0] if self.__class__.__doc__ else self.name
-        )
+        """One-line explanation of the metric for reports, without a final period."""
+        if not self.__class__.__doc__:
+            return self.name
+        return self.__class__.__doc__.strip().splitlines()[0].rstrip(".")
 
     def applies_to(self, item: EvalItem, eval_set: str) -> bool:
         """Whether this scorer scores ``item`` from ``eval_set``."""
