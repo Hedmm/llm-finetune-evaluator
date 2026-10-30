@@ -14,6 +14,7 @@ from llm_finetune_evaluator.analysis import AnalysisSettings, analyze
 from llm_finetune_evaluator.config import load_config
 from llm_finetune_evaluator.report import formatting as fmt
 from llm_finetune_evaluator.runner import run_experiment
+from llm_finetune_evaluator.stats import FloatArray
 from llm_finetune_evaluator.storage import load_run
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +25,7 @@ def _text(path: str) -> str:
     return " ".join((ROOT / path).read_text(encoding="utf-8").split())
 
 
-def _worked_example() -> tuple[np.ndarray, np.ndarray]:
+def _worked_example() -> tuple[FloatArray, FloatArray]:
     both, base_only, tuned_only, neither = 138, 2, 12, 48
     base = np.array([1] * both + [1] * base_only + [0] * tuned_only + [0] * neither, dtype=float)
     tuned = np.array([1] * both + [0] * base_only + [1] * tuned_only + [0] * neither, dtype=float)

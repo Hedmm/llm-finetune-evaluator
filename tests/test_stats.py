@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from statistics import NormalDist
+from typing import Any
 
 import numpy as np
 import pytest
@@ -11,6 +12,7 @@ from scipy import stats as sps
 from sklearn.metrics import cohen_kappa_score
 
 from llm_finetune_evaluator import stats
+from llm_finetune_evaluator.stats import FloatArray
 
 
 def _paired_binary(
@@ -81,7 +83,7 @@ class TestBootstrap:
         ("bad", "message"),
         [([], "empty"), ([1.0, math.nan], "NaN"), ([[1.0, 0.0]], "one-dimensional")],
     )
-    def test_rejects_invalid_input(self, bad: list[object], message: str) -> None:
+    def test_rejects_invalid_input(self, bad: Any, message: str) -> None:
         with pytest.raises(ValueError, match=message):
             stats.bootstrap_ci(bad)
 
@@ -107,7 +109,7 @@ class TestPairedBootstrap:
         a = rng.random(300)
         b = np.clip(a + rng.normal(0.05, 0.2, size=300), 0, 1)
 
-        def difference(x: np.ndarray, y: np.ndarray, axis: int = -1) -> np.ndarray:
+        def difference(x: FloatArray, y: FloatArray, axis: int = -1) -> FloatArray:
             return np.asarray(np.mean(x, axis=axis) - np.mean(y, axis=axis))
 
         reference = sps.bootstrap(

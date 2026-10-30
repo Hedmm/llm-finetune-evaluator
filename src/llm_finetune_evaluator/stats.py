@@ -403,7 +403,7 @@ def _exact_sign_flip_pvalue(magnitudes: IntArray, observed: int) -> float | None
     width = 2 * total + 1
     if magnitudes.size * width > _EXACT_PERMUTATION_WORK:
         return None
-    distribution = np.zeros(width, dtype=np.float64)
+    distribution: FloatArray = np.zeros(width, dtype=np.float64)
     distribution[total] = 1.0
     for magnitude in magnitudes.tolist():
         shifted = np.zeros_like(distribution)

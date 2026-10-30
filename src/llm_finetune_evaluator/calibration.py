@@ -37,7 +37,12 @@ from llm_finetune_evaluator.dataset import EvalItem
 from llm_finetune_evaluator.errors import DatasetError
 from llm_finetune_evaluator.rubric import JudgeVerdict, normalise_verdict
 from llm_finetune_evaluator.scorers.judge import UNPARSEABLE, JudgeScorer
-from llm_finetune_evaluator.stats import bootstrap_ci_statistic, cohen_kappa, confusion_matrix
+from llm_finetune_evaluator.stats import (
+    IntArray,
+    bootstrap_ci_statistic,
+    cohen_kappa,
+    confusion_matrix,
+)
 
 DEFAULT_KAPPA_THRESHOLD = 0.6
 CALIBRATION_FILE_NAME = "calibration.json"
@@ -261,7 +266,7 @@ def calibrate(
     human_array = np.array(human_labels)
     judge_array = np.array(judge_labels)
 
-    def resampled_kappa(indices: np.ndarray) -> float:
+    def resampled_kappa(indices: IntArray) -> float:
         return cohen_kappa(list(human_array[indices]), list(judge_array[indices]), categories)
 
     interval = bootstrap_ci_statistic(
