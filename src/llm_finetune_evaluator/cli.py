@@ -750,11 +750,11 @@ def mde(
             return
         sizes: Sequence[int] = [n] if n is not None else [100, 200, 300, 500, 1000, 2000, 5000]
         table = Table(
-            title=(
-                f"Minimum detectable difference (discordance {discordance:g}, "
-                f"alpha {alpha}, power {power:.0%})"
-            ),
+            title="Minimum detectable difference",
+            caption=f"discordance {discordance:g}, alpha {alpha}, power {power:.0%}",
             title_justify="left",
+            caption_justify="left",
+            min_width=50,
         )
         table.add_column("Items", justify="right")
         table.add_column("MDE", justify="right")
