@@ -143,7 +143,7 @@ footer { max-width: 1080px; margin: 48px auto 32px; padding: 0 16px; color: var(
 <header class="page">
   <h1>Quickstart: fine-tuned vs base (simulated)</h1>
   <p>Synthetic customer-support eval for a fictional bank: product-sheet questions with trap questions, intent routing and transfer-request extraction. Simulated models and judge.</p>
-  <p class="meta">Generated 2026-10-30 15:29 UTC by llm-finetune-evaluator 0.1.0 · baseline <strong>base</strong> · 2 models · 450 items in 3 eval sets</p>
+  <p class="meta">Generated 2026-10-30 15:47 UTC by llm-finetune-evaluator 0.1.0 · baseline <strong>base</strong> · 2 models · 450 items in 3 eval sets</p>
 </header>
 <nav class="toc" aria-label="Sections">
   <a href="#headline">Headline</a><a href="#comparisons">Comparisons</a><a href="#regressions">Regressions</a><a href="#slices">Slices</a><a href="#examples">Wins and losses</a><a href="#judge">Judge</a><a href="#metadata">Run metadata</a><a href="#method">Method</a>
@@ -170,11 +170,11 @@ footer { max-width: 1080px; margin: 48px auto 32px; padding: 0 16px; color: var(
 <tbody>
 <tr><td><code>answer_match</code><div class="hint">Normalised match: the output contains a reference answer</div></td><td class="num">200</td><td class="num">55.0% (48.0 to 62.0)</td><td class="num">68.0% (61.5 to 74.5)</td></tr>
 <tr><td><code>judge_score</code><div class="hint">Judge score from mock-judge (correct = 1, partially correct = 0.5, otherwise 0)</div></td><td class="num">270</td><td class="num">46.5% (40.9 to 52.2)</td><td class="num">65.9% (60.6 to 71.1)</td></tr>
-<tr><td><code>trap_accuracy</code><div class="hint">Trap accuracy: the model abstains when the answer is not in the source.</div></td><td class="num">70</td><td class="num">21.4% (12.9 to 31.4)</td><td class="num">77.1% (67.1 to 87.1)</td></tr>
-<tr><td><code>needless_refusal</code> <span class="dim">(lower is better)</span><div class="hint">Needless refusals: answerable items the model refused or claimed it could not answer.</div></td><td class="num">380</td><td class="num">1.3% (0.3 to 2.6)</td><td class="num">7.6% (5.0 to 10.5)</td></tr>
+<tr><td><code>trap_accuracy</code><div class="hint">Trap accuracy: the model abstains when the answer is not in the source</div></td><td class="num">70</td><td class="num">21.4% (12.9 to 31.4)</td><td class="num">77.1% (67.1 to 87.1)</td></tr>
+<tr><td><code>needless_refusal</code> <span class="dim">(lower is better)</span><div class="hint">Needless refusals: answerable items the model refused or claimed it could not answer</div></td><td class="num">380</td><td class="num">1.3% (0.3 to 2.6)</td><td class="num">7.6% (5.0 to 10.5)</td></tr>
 <tr><td><code>numeric_match</code><div class="hint">Numeric match (exact, last number in the output)</div></td><td class="num">146</td><td class="num">56.8% (49.3 to 65.1)</td><td class="num">67.8% (60.3 to 75.3)</td></tr>
 <tr><td><code>intent_accuracy</code><div class="hint">Label-set accuracy over 8 labels (off-list answers count as wrong)</div></td><td class="num">120</td><td class="num">60.8% (52.5 to 70.0)</td><td class="num">71.7% (63.3 to 79.2)</td></tr>
-<tr><td><code>field_f1</code><div class="hint">Field F1: field-level F1 of the JSON object in the output against the reference.</div></td><td class="num">60</td><td class="num">63.3% (54.3 to 72.8)</td><td class="num">89.9% (82.9 to 96.0)</td></tr>
+<tr><td><code>field_f1</code><div class="hint">Field F1: field-level F1 of the JSON object in the output against the reference</div></td><td class="num">60</td><td class="num">63.3% (54.3 to 72.8)</td><td class="num">89.9% (82.9 to 96.0)</td></tr>
 </tbody></table></div>
 <details><summary>Outcome labels (refusals, made-up answers, invalid labels, judge verdicts)</summary>
 <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Model</th><th>Counts</th></tr></thead><tbody><tr><td><code>judge_score</code></td><td>base</td><td>correct: 98, incorrect: 77, made_up: 50, partially_correct: 29, refused: 16</td></tr><tr><td><code>judge_score</code></td><td>finetuned</td><td>correct: 116, incorrect: 46, made_up: 15, partially_correct: 30, refused: 63</td></tr><tr><td><code>trap_accuracy</code></td><td>base</td><td>abstained: 15, complied: 17, made_up: 38</td></tr><tr><td><code>trap_accuracy</code></td><td>finetuned</td><td>abstained: 54, complied: 6, made_up: 10</td></tr><tr><td><code>needless_refusal</code></td><td>base</td><td>answered: 375, refused: 5</td></tr><tr><td><code>needless_refusal</code></td><td>finetuned</td><td>answered: 351, refused: 29</td></tr><tr><td><code>numeric_match</code></td><td>base</td><td>no_number: 8</td></tr><tr><td><code>numeric_match</code></td><td>finetuned</td><td>no_number: 14</td></tr><tr><td><code>intent_accuracy</code></td><td>finetuned</td><td>invalid_label: 9</td></tr><tr><td><code>field_f1</code></td><td>finetuned</td><td>invalid_json: 2</td></tr>
@@ -597,8 +597,8 @@ Question: Is there a one-off charge for setting up the Personal loan, in euros?<
 <div class="table-wrap"><table>
 <thead><tr><th>Model</th><th>Backend</th><th>Model id</th><th>Sampling</th><th class="num">Items</th><th class="num">Generations</th><th>Finished</th></tr></thead>
 <tbody>
-<tr><td>base <span class="dim">(baseline)</span></td><td>mock</td><td><code>mock</code></td><td>temperature=0.0, top_p=1.0, max_tokens=256</td><td class="num">450</td><td class="num">0 new · 450 cached</td><td class="nowrap">2026-10-30 15:29 UTC</td></tr>
-<tr><td>finetuned</td><td>mock</td><td><code>mock</code></td><td>temperature=0.0, top_p=1.0, max_tokens=256</td><td class="num">450</td><td class="num">0 new · 450 cached</td><td class="nowrap">2026-10-30 15:29 UTC</td></tr>
+<tr><td>base <span class="dim">(baseline)</span></td><td>mock</td><td><code>mock</code></td><td>temperature=0.0, top_p=1.0, max_tokens=256</td><td class="num">450</td><td class="num">0 new · 450 cached</td><td class="nowrap">2026-10-30 15:47 UTC</td></tr>
+<tr><td>finetuned</td><td>mock</td><td><code>mock</code></td><td>temperature=0.0, top_p=1.0, max_tokens=256</td><td class="num">450</td><td class="num">0 new · 450 cached</td><td class="nowrap">2026-10-30 15:47 UTC</td></tr>
 </tbody></table></div>
 <div class="table-wrap"><table>
 <thead><tr><th>Eval set</th><th>File</th><th class="num">Items</th><th>Content SHA-256</th></tr></thead>

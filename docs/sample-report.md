@@ -2,7 +2,7 @@
 
 Synthetic customer-support eval for a fictional bank: product-sheet questions with trap questions, intent routing and transfer-request extraction. Simulated models and judge.
 
-Generated 2026-10-30 15:29 UTC by llm-finetune-evaluator 0.1.0. Baseline: **base**. 2 models, 450 items in 3 eval set(s).
+Generated 2026-10-30 15:47 UTC by llm-finetune-evaluator 0.1.0. Baseline: **base**. 2 models, 450 items in 3 eval set(s).
 
 ## Headline metrics
 
@@ -22,11 +22,11 @@ Metric definitions:
 
 - `answer_match`: Normalised match: the output contains a reference answer.
 - `judge_score`: Judge score from mock-judge (correct = 1, partially correct = 0.5, otherwise 0).
-- `trap_accuracy`: Trap accuracy: the model abstains when the answer is not in the source..
-- `needless_refusal`: Needless refusals: answerable items the model refused or claimed it could not answer..
+- `trap_accuracy`: Trap accuracy: the model abstains when the answer is not in the source.
+- `needless_refusal`: Needless refusals: answerable items the model refused or claimed it could not answer.
 - `numeric_match`: Numeric match (exact, last number in the output).
 - `intent_accuracy`: Label-set accuracy over 8 labels (off-list answers count as wrong).
-- `field_f1`: Field F1: field-level F1 of the JSON object in the output against the reference..
+- `field_f1`: Field F1: field-level F1 of the JSON object in the output against the reference.
 
 ## Comparison with the baseline
 
@@ -331,8 +331,8 @@ Calibration on 80 human-labelled outputs: agreement 92.5%, Cohen's kappa 0.90 (9
 
 | Model | Backend | Model id | Sampling | Items | Generations | Finished |
 | --- | --- | --- | --- | --- | --- | --- |
-| base (baseline) | mock | mock | temperature=0.0, top_p=1.0, max_tokens=256 | 450 | 0 new / 450 cached | 2026-10-30 15:29 UTC |
-| finetuned | mock | mock | temperature=0.0, top_p=1.0, max_tokens=256 | 450 | 0 new / 450 cached | 2026-10-30 15:29 UTC |
+| base (baseline) | mock | mock | temperature=0.0, top_p=1.0, max_tokens=256 | 450 | 0 new / 450 cached | 2026-10-30 15:47 UTC |
+| finetuned | mock | mock | temperature=0.0, top_p=1.0, max_tokens=256 | 450 | 0 new / 450 cached | 2026-10-30 15:47 UTC |
 
 | Eval set | File | Items | Content SHA-256 (prefix) |
 | --- | --- | ---: | --- |
