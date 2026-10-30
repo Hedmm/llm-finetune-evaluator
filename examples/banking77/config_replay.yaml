@@ -1,0 +1,47 @@
+# The case study's recorded predictions, replayed through lfe (no GPU needed).
+#
+#   lfe run examples/banking77/config_replay.yaml
+#   lfe report runs/banking77_case_study
+#
+# predictions/*.jsonl hold the outputs of the four arms of the LoRA vs QLoRA vs
+# full fine-tuning case study (Qwen2.5-1.5B-Instruct, one H100) for the 300
+# messages of the slice:
+# https://github.com/Hedmm/ml-case-studies/tree/main/lora-vs-qlora-vs-full-finetuning
+
+name: banking77_case_study
+description: >-
+  Recorded predictions of the base model, LoRA, QLoRA and full fine-tuning on a 300-message
+  slice of the Banking77 test split (PolyAI, CC BY 4.0).
+
+eval_sets:
+  - name: banking77
+    path: data/banking77_slice.jsonl
+
+models:
+  - name: base
+    backend: replay
+    predictions: predictions/base.jsonl
+  - name: lora
+    backend: replay
+    predictions: predictions/lora.jsonl
+  - name: qlora
+    backend: replay
+    predictions: predictions/qlora.jsonl
+  - name: full
+    backend: replay
+    predictions: predictions/full.jsonl
+
+baseline: base
+
+scorers:
+  - type: exact_match
+    name: accuracy
+  - type: label_set
+    name: label_accuracy
+    labels_file: labels.txt
+
+stats:
+  slice_by: [group, length]
+
+report:
+  title: "Banking77 case study: base vs LoRA vs QLoRA vs full fine-tuning"

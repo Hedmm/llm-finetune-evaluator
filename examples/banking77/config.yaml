@@ -1,0 +1,69 @@
+# Banking77 intent classification: a base model against its LoRA fine-tune,
+# both served behind OpenAI-compatible endpoints.
+#
+# With vLLM, one server can host the base model and the adapter:
+#
+#   vllm serve Qwen/Qwen2.5-1.5B-Instruct --enable-lora \
+#       --lora-modules banking77-lora=/path/to/adapter --max-lora-rank 16
+#
+#   lfe run examples/banking77/config.yaml --dry-run    # check the setup
+#   lfe run examples/banking77/config.yaml
+#   lfe report runs/banking77
+#
+# Set LFE_BASE_URL (and LFE_LORA_URL, if the adapter runs on another server)
+# to point at your endpoints. The prompt is the one used in the case study:
+# https://github.com/Hedmm/ml-case-studies/tree/main/lora-vs-qlora-vs-full-finetuning
+
+name: banking77
+description: >-
+  300-message slice of the Banking77 test split (PolyAI, CC BY 4.0): base model against
+  its LoRA fine-tune, both behind OpenAI-compatible endpoints.
+
+eval_sets:
+  - name: banking77
+    path: data/banking77_slice.jsonl
+    prompt:
+      system: You are an intent classifier for a bank's customer support.
+      template: |-
+        Classify the customer message into exactly one of these intents:
+        {{ labels | join(", ") }}
+
+        Message: {{ input }}
+        Answer with the intent label only.
+      variable_files:
+        labels: labels.txt
+
+models:
+  - name: base
+    backend: openai
+    model: Qwen/Qwen2.5-1.5B-Instruct
+    base_url: ${LFE_BASE_URL:-http://localhost:8000/v1}
+    max_concurrency: 16
+  - name: lora
+    backend: openai
+    model: banking77-lora
+    base_url: ${LFE_LORA_URL:-http://localhost:8000/v1}
+    max_concurrency: 16
+
+baseline: base
+
+sampling:
+  temperature: 0.0
+  max_tokens: 16
+
+scorers:
+  # Strict: the whole answer must be the label, as in the case study.
+  - type: exact_match
+    name: accuracy
+  # Lenient: first line, any case, quotes and "Intent:" prefixes removed; answers
+  # outside the 77 labels count as wrong and are reported as invalid labels.
+  - type: label_set
+    name: label_accuracy
+    labels_file: labels.txt
+  - type: refusal
+
+stats:
+  slice_by: [group, length]
+
+report:
+  title: "Banking77: LoRA fine-tune vs base"
