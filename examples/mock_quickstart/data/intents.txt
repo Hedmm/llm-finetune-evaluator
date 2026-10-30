@@ -1,0 +1,8 @@
+account_closure
+address_change
+card_lost
+card_not_arrived
+fee_question
+fraud_report
+loan_application
+transfer_failed

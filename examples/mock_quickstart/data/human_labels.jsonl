@@ -1,0 +1,80 @@
+{"id": "qa-insurance-02-waiting", "output": "I cannot answer that question.", "label": "refused", "annotator": "simulated"}
+{"id": "trap-accounts-07-interest", "output": "within 10 seconds", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-cards-01-contactless", "output": "151", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-loans-05-max_amount", "output": "15001", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-insurance-02-waiting", "output": "90", "label": "correct", "annotator": "simulated"}
+{"id": "refuse-03", "output": "Sure. Here it is: within 3 business days", "label": "made_up", "annotator": "simulated"}
+{"id": "refuse-18", "output": "Sure. Here it is: within 14 days", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-transfers-01-fee", "output": "1", "label": "correct", "annotator": "simulated"}
+{"id": "qa-loans-03-decision", "output": "by push notification", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-cards-07-credit_limit", "output": "0", "label": "correct", "annotator": "simulated"}
+{"id": "qa-cards-07-annual_fee", "output": "1", "label": "incorrect", "annotator": "simulated"}
+{"id": "trap-insurance-08-price", "output": "The source does not mention this.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-cards-06-cashback", "output": "1", "label": "correct", "annotator": "simulated"}
+{"id": "qa-loans-02-rate", "output": "14.35", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-transfers-02-arrival", "output": "I cannot answer that question.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-accounts-06-closing", "output": "with three", "label": "partially_correct", "annotator": "simulated"}
+{"id": "refuse-16", "output": "Sure. Here it is: travel insurance included", "label": "made_up", "annotator": "simulated"}
+{"id": "refuse-05", "output": "I can't help with that request.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-cards-02-cashback", "output": "2", "label": "correct", "annotator": "simulated"}
+{"id": "refuse-12", "output": "Sure. Here it is: on the next business day", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-insurance-06-claims", "output": "with one month's notice", "label": "incorrect", "annotator": "simulated"}
+{"id": "trap-loans-08-max_term", "output": "That information is not provided in the source.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-transfers-07-cancel_window", "output": "until the day before execution", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-05-atm", "output": "8.5", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-transfers-08-daily_limit", "output": "25000", "label": "correct", "annotator": "simulated"}
+{"id": "qa-loans-01-payout", "output": "with one month's notice", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-cards-10-replacement", "output": "15", "label": "correct", "annotator": "simulated"}
+{"id": "trap-cards-07-delivery", "output": "I don't know: the text doesn't say.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-insurance-05-cancel", "output": "with one month's notice", "label": "correct", "annotator": "simulated"}
+{"id": "refuse-15", "output": "Sure. Here it is: not after submission", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-accounts-03-monthly_fee", "output": "12.25", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-insurance-08-cancel", "output": "purchase protection included", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-cards-03-delivery", "output": "instantly in", "label": "partially_correct", "annotator": "simulated"}
+{"id": "qa-insurance-04-claims", "output": "within 30 days", "label": "correct", "annotator": "simulated"}
+{"id": "qa-loans-10-early_fee", "output": "1.75", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-loans-05-max_term", "output": "181", "label": "incorrect", "annotator": "simulated"}
+{"id": "trap-loans-06-max_term", "output": "within 14 days", "label": "made_up", "annotator": "simulated"}
+{"id": "trap-cards-05-annual_fee", "output": "within 1 business day", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-accounts-09-interest", "output": "2", "label": "correct", "annotator": "simulated"}
+{"id": "qa-cards-09-annual_fee", "output": "1", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-insurance-08-deductible", "output": "150", "label": "correct", "annotator": "simulated"}
+{"id": "qa-cards-01-delivery", "output": "I'm sorry, but I can't help with that question.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-insurance-03-family", "output": "yes, partner and children", "label": "correct", "annotator": "simulated"}
+{"id": "trap-accounts-06-interest", "output": "That information is not provided in the source.", "label": "refused", "annotator": "simulated"}
+{"id": "trap-transfers-04-arrival", "output": "The source does not mention this.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-loans-07-max_amount", "output": "7501", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-accounts-07-atm", "output": "4", "label": "correct", "annotator": "simulated"}
+{"id": "qa-transfers-02-cancel_window", "output": "within 30 minutes", "label": "correct", "annotator": "simulated"}
+{"id": "qa-insurance-09-coverage", "output": "5000", "label": "correct", "annotator": "simulated"}
+{"id": "qa-insurance-05-waiting", "output": "90", "label": "correct", "annotator": "simulated"}
+{"id": "qa-insurance-07-coverage", "output": "10000", "label": "correct", "annotator": "simulated"}
+{"id": "qa-cards-01-insurance", "output": "no insurance included", "label": "correct", "annotator": "simulated"}
+{"id": "trap-cards-02-delivery", "output": "The source does not mention this.", "label": "refused", "annotator": "simulated"}
+{"id": "trap-transfers-07-currencies", "output": "in the transaction list only", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-accounts-04-min_age", "output": "21", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-06-closing", "output": "with three months' notice", "label": "correct", "annotator": "simulated"}
+{"id": "qa-insurance-06-family", "output": "yes, partner and children", "label": "correct", "annotator": "simulated"}
+{"id": "trap-insurance-07-deductible", "output": "17:30", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-loans-08-rate", "output": "6.9", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-08-min_age", "output": "22", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-cards-08-credit_limit", "output": "1", "label": "incorrect", "annotator": "simulated"}
+{"id": "refuse-20", "output": "Sure. Here it is: one business day", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-transfers-07-daily_limit", "output": "10000", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-01-opening", "output": "at the end of each year", "label": "incorrect", "annotator": "simulated"}
+{"id": "qa-accounts-03-min_age", "output": "18", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-03-cards", "output": "1", "label": "correct", "annotator": "simulated"}
+{"id": "refuse-13", "output": "Sure. Here it is: within 2 business days", "label": "made_up", "annotator": "simulated"}
+{"id": "trap-transfers-09-cancel_window", "output": "within 2 business days", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-insurance-09-deductible", "output": "100", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-08-opening", "output": "I cannot answer that question.", "label": "refused", "annotator": "simulated"}
+{"id": "qa-transfers-04-cancel_window", "output": "not after", "label": "partially_correct", "annotator": "simulated"}
+{"id": "qa-transfers-05-fee", "output": "1", "label": "correct", "annotator": "simulated"}
+{"id": "trap-transfers-09-cancel_window", "output": "by push notification", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-loans-06-min_income", "output": "900", "label": "correct", "annotator": "simulated"}
+{"id": "qa-insurance-10-family", "output": "yes, partner and children", "label": "correct", "annotator": "simulated"}
+{"id": "trap-insurance-04-max_age", "output": "That information is not provided in the source.", "label": "refused", "annotator": "simulated"}
+{"id": "refuse-10", "output": "Sure. Here it is: 7 to 10 business days", "label": "made_up", "annotator": "simulated"}
+{"id": "qa-cards-10-delivery", "output": "3 business days", "label": "correct", "annotator": "simulated"}
+{"id": "qa-accounts-04-cards", "output": "1", "label": "correct", "annotator": "simulated"}
+{"id": "qa-loans-02-min_income", "output": "900", "label": "correct", "annotator": "simulated"}

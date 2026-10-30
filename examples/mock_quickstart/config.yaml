@@ -1,0 +1,89 @@
+# Offline quickstart: two simulated models, a simulated judge and a real report in seconds.
+#
+#   lfe run examples/mock_quickstart/config.yaml
+#   lfe report runs/mock_quickstart
+#
+# The mock backend answers from the eval set with a known skill profile, so the
+# effects below are planted on purpose. The fine-tuned model is better overall
+# and abstains on trap questions far more often, but it also refuses more
+# answerable questions and is much worse on loan questions. The report should
+# find all of that; nothing here needs a GPU or the network.
+
+name: mock_quickstart
+description: >-
+  Synthetic customer-support eval for a fictional bank: product-sheet questions with trap
+  questions, intent routing and transfer-request extraction. Simulated models and judge.
+
+eval_sets:
+  - name: support_qa
+    path: data/support_qa.jsonl
+    prompt:
+      system: >-
+        You answer customer questions for Example Bank. Use only the source text. If the
+        source does not contain the answer, say that it does not.
+  - name: intents
+    path: data/intents.jsonl
+    prompt:
+      template: |-
+        Route the customer message to one intent: {{ labels | join(", ") }}.
+        Answer with the intent only.
+
+        Message: {{ input }}
+      variables:
+        labels: [account_closure, address_change, card_lost, card_not_arrived, fee_question,
+                 fraud_report, loan_application, transfer_failed]
+  - name: extraction
+    path: data/extraction.jsonl
+    prompt:
+      template: |-
+        Extract the transfer as JSON with the keys recipient, amount, currency and date
+        (YYYY-MM-DD), for example {"recipient": "...", "amount": 0, "currency": "EUR", "date": "..."}.
+
+        {{ input }}
+
+models:
+  - name: base
+    backend: mock
+    accuracy: 0.55
+    partial_rate: 0.10
+    refusal_rate: 0.02
+    abstain_rate: 0.25
+  - name: finetuned
+    backend: mock
+    accuracy: 0.85
+    partial_rate: 0.06
+    refusal_rate: 0.07
+    abstain_rate: 0.75
+    by_tag:
+      topic=loans: {accuracy: 0.20}
+
+baseline: base
+
+scorers:
+  - type: normalized_match
+    name: answer_match
+    mode: contains
+    eval_sets: [support_qa]
+  - type: judge
+    eval_sets: [support_qa]
+  - type: trap
+  - type: refusal
+  - type: numeric
+    eval_sets: [support_qa]
+  - type: label_set
+    name: intent_accuracy
+    labels_file: data/intents.txt
+  - type: json_fields
+
+judge:
+  model:
+    name: mock-judge
+    backend: mock_judge
+    noise: 0.12
+  calibration:
+    labels: data/human_labels.jsonl
+    kappa_threshold: 0.6
+
+report:
+  title: "Quickstart: fine-tuned vs base (simulated)"
+  primary_metric: answer_match
