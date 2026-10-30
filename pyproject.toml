@@ -1,0 +1,159 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llm-finetune-evaluator"
+dynamic = ["version"]
+description = "Is your fine-tuned LLM really better? Paired statistics, regression slices, trap questions and judge calibration with Markdown/HTML reports."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Maksim M." }]
+keywords = [
+  "llm",
+  "evaluation",
+  "fine-tuning",
+  "lora",
+  "statistics",
+  "mcnemar",
+  "bootstrap",
+  "llm-as-judge",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed",
+]
+dependencies = [
+  "httpx>=0.27",
+  "jinja2>=3.1",
+  "numpy>=1.24",
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "rich>=13.7",
+  "typer>=0.12",
+]
+
+[project.optional-dependencies]
+transformers = [
+  "accelerate>=1.0",
+  "peft>=0.13",
+  "torch>=2.2",
+  "transformers>=4.56",
+]
+dev = [
+  "mypy>=1.11",
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.6",
+  "scikit-learn>=1.3",
+  "scipy>=1.11",
+  "types-PyYAML>=6.0",
+]
+
+[project.scripts]
+lfe = "llm_finetune_evaluator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Hedmm/llm-finetune-evaluator"
+Documentation = "https://github.com/Hedmm/llm-finetune-evaluator/tree/main/docs"
+"Case study" = "https://github.com/Hedmm/ml-case-studies/tree/main/lora-vs-qlora-vs-full-finetuning"
+
+[tool.hatch.version]
+path = "src/llm_finetune_evaluator/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/llm_finetune_evaluator"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/tests",
+  "/docs",
+  "/examples",
+  "/README.md",
+  "/LICENSE",
+  "/pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+markers = [
+  "slow: tests that take more than a few seconds",
+]
+
+[tool.coverage.run]
+source = ["llm_finetune_evaluator"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "B",    # flake8-bugbear
+  "C4",   # flake8-comprehensions
+  "D",    # pydocstyle
+  "E",    # pycodestyle errors
+  "ERA",  # commented-out code
+  "F",    # pyflakes
+  "I",    # isort
+  "N",    # pep8-naming
+  "PIE",  # flake8-pie
+  "PT",   # flake8-pytest-style
+  "PTH",  # prefer pathlib
+  "RET",  # flake8-return
+  "RUF",  # ruff-specific rules
+  "SIM",  # flake8-simplify
+  "T20",  # no print statements
+  "UP",   # pyupgrade
+  "W",    # pycodestyle warnings
+]
+ignore = [
+  "D105", # magic methods are self-explanatory
+  "D107", # __init__ arguments are documented on the class
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"examples/**" = ["T20"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unreachable = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["torch", "torch.*", "transformers", "transformers.*", "peft", "peft.*", "tokenizers", "tokenizers.*", "scipy", "scipy.*", "sklearn", "sklearn.*"]
+ignore_missing_imports = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
