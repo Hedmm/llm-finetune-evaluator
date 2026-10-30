@@ -568,7 +568,9 @@ def required_sample_size(
         )
     z_a, z_b = _z_scores(alpha, power)
     root = z_a * math.sqrt(discordance) + z_b * math.sqrt(discordance - effect**2)
-    return math.ceil((root / effect) ** 2)
+    # The tolerance keeps floating-point noise from adding an item when the effect comes
+    # from minimum_detectable_effect, so the two functions stay exact inverses.
+    return math.ceil((root / effect) ** 2 - 1e-9)
 
 
 def minimum_detectable_effect_continuous(
